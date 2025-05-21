@@ -7,6 +7,6 @@ const userSchema = new Schema({
     token:{type:String},
 });
 
-const User = mongoose.model("User","userSchema");
+const User = mongoose.model("User",userSchema);
 
 export {User};

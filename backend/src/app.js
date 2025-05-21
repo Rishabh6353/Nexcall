@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import {connectToSocket} from "./controllers/socketManager.js";
 
 import cors from "cors";
+import userRoutes from "./routes/users.routes.js";
 
 
 const app = express();
@@ -20,6 +21,9 @@ app.set("port",(process.env.PORT || 8000));
 app.use(cors());
 app.use(express.json({limit:"40kb"}));
 app.use(express.urlencoded({limit:"40kb", extended:"true"}));
+
+//Any route defined inside userRoutes will be prefixed by /api/v1/users.
+app.use("/api/v1/users",userRoutes);
 
 
 const start = async()=>{
