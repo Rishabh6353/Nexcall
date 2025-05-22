@@ -1,0 +1,63 @@
+.landingPageContainer{
+    height: 100vh;
+    width: 100vw;
+    background: url("../public/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color:white
+}
+
+.landingPageContainer nav{
+    /* inline padding means horizontal padding */
+    padding-inline: 1.2rem;
+
+    /* //for vertical padding */
+    padding-block: 1.6rem;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.landingPageContainer h2{
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.landingPageContainer nav .navList{
+    display: flex;
+    gap: 1.6rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.landingMainContainer{
+    display: flex;
+    justify-content: space-between;
+    padding-inline: 3rem;
+    align-items: center;
+    height: 80vh;
+}
+
+.landingMainContainer> div:nth-child(2) img{
+    height: 70vh;
+    width: auto;
+} 
+
+.landingMainContainer> div:nth-child(1) {
+    font-size: 2.2rem;
+}
+
+.landingMainContainer> div:nth-child(1) div[role="button"]{
+    background-color: #D97500;
+    width: fit-content;
+    padding: 1rem;
+    border-radius: 20px;    
+    margin-top: 1.5rem;
+}
+
+.landingMainContainer> div:nth-child(1) div[role="button"] a{
+    text-decoration: none;
+    color: white;
+    font-size: 1.7rem;
+}
