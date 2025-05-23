@@ -24,7 +24,7 @@ export default function LandingPage() {
           <p>Cover a distance with NexCall.</p>
 
           <div role="button">
-            <Link to={"/home"}>Get Started</Link>
+            <Link to={"/auth"}>Get Started</Link>
           </div>
         </div>
 
