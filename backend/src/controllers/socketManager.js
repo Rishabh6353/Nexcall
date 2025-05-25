@@ -22,6 +22,8 @@ export const connectToSocket = (server)=>{
 
         socket.on("join-call",(path)=>{
 
+            console.log("Something connected");
+
             if(connections[path]=== undefined){
                 connections[path]=[];
             }
@@ -29,7 +31,12 @@ export const connectToSocket = (server)=>{
 
             timeOnline[socket.id]= new Date();
 
-            if(messages[path]=== undefined){
+            const clients = connections[path];
+            clients.forEach(id => {
+                io.to(id).emit("user-joined", socket.id, clients);
+            });
+
+            if(messages[path]!== undefined){
             for(let a= 0; a< connections[path].length; ++a){
                 io.to(socket.id).emit("chat-messages", messages[path][a]['data'],
                 messages[path][a]['sender'], messages[path][a]['socket-id-sender'])
@@ -58,7 +65,7 @@ export const connectToSocket = (server)=>{
             }
 
             messages[matchingRoom].push({'sender': sender, "data": data , "socket-id-sender": socket.id });
-            console.log("message ", KeyboardEvent, ";", sender,data);
+            console.log("message", sender, data);
 
             connections[matchingRoom].forEach((elem)=>{
                 io.to(elem).emit("chat-message", data , sender, socket.id);
@@ -68,18 +75,18 @@ export const connectToSocket = (server)=>{
 
     socket.on("disconnect",()=>{
 
-        var diffTime = Math.abs(timeOnline(socket.id) - new Date());
+        var diffTime = Math.abs(timeOnline[socket.id] - new Date());
 
         var key;
 
-        for(const [room,person] of JSON.stringify(Object.entries(connections))){
+        for(const [room,person] of Object.entries(connections)){
 
             for(let a = 0; a <person.length; ++a){
                 if(person[a]== socket.id){
                     key = room;
 
                     for(let a= 0 ; a<connections[key].length; ++a){
-                        io.to(connections[key][a].emit('user-left',socket.id))
+                        io.to(connections[key][a]).emit('user-left',socket.id)
                     }
 
                     var index = connections[key].indexOf(socket.id);
