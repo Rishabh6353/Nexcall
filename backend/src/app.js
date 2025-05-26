@@ -27,6 +27,7 @@ app.use("/api/v1/users",userRoutes);
 
 
 const start = async()=>{
+    //   app.set("mongo_user")
     const connectionDb = await mongoose.connect("mongodb+srv://Nexcall:Damndean1@nexcall.sa9ndca.mongodb.net/?retryWrites=true&w=majority&appName=Nexcall");
 
     console.log(`Mongo connceted Db Host: ${connectionDb.connection.host}`)
