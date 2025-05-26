@@ -191,7 +191,7 @@ export default function VideoMeetComponent() {
         })
     }
 
-    let getUserMedia = () => {
+     let getUserMedia = () => {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
                 .then(getUserMediaSuccess)
@@ -201,9 +201,29 @@ export default function VideoMeetComponent() {
             try {
                 let tracks = localVideoref.current.srcObject.getTracks()
                 tracks.forEach(track => track.stop())
-            } catch (e) { }
+                
+                // Create black video track when video is off
+                let blackSilence = (...args) => new MediaStream([black(...args), silence()])
+                window.localStream = blackSilence()
+                localVideoref.current.srcObject = window.localStream
+
+                // Notify all peers about the stream change
+                for (let id in connections) {
+                    if (id === socketIdRef.current) continue
+                    
+                    connections[id].addStream(window.localStream)
+                    connections[id].createOffer().then((description) => {
+                        connections[id].setLocalDescription(description)
+                            .then(() => {
+                                socketRef.current.emit('signal', id, JSON.stringify({ 'sdp': connections[id].localDescription }))
+                            })
+                            .catch(e => console.log(e))
+                    })
+                }
+            } catch (e) { console.log(e) }
         }
     }
+
 
 
 
