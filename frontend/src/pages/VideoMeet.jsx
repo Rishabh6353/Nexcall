@@ -12,6 +12,8 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
 import server from '../environment';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const server_url = server;
@@ -468,6 +470,10 @@ export default function VideoMeetComponent() {
     }
 
 
+    const navigate = useNavigate();
+
+
+
     return (
         <div>
 
@@ -570,6 +576,13 @@ export default function VideoMeetComponent() {
                 </div>
 
             }
+
+            <div style={{ marginTop: "20px", textAlign: "center" }}>
+  <Button variant="outlined" onClick={() => navigate("/home")}>
+    Back to Home
+  </Button>
+</div>
+
 
         </div>
     )
