@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 import {
   Card,
   CardContent,
@@ -18,59 +20,47 @@ export default function Authentication() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState("asd");
-  const [messages, setMessages] = useState("");
+  const [formState, setFormState] = useState(0); // 0 for login, 1 for register
+  const navigate = useNavigate();
 
-  const [formState, setFormState] = useState(0);
-  const [open, setOpen] = useState(false);
+  const { handleRegister, handleLogin } = useContext(AuthContext);
 
-  const { handleRegister, handleLogin } = React.useContext(AuthContext);
-
-
-  let handleAuth = async () => {
+  const handleAuth = async (e) => {
+    e.preventDefault(); // prevent page reload
 
     try {
       if (formState === 0) {
-        try{
-          let result = await handleLogin(username, password);
-        }catch (err) {
-          let message = err.response.data.message;
-
-          toast({
-            title: "Error",
-            description: message,
-            variant: "destructive", // red style for error
-      });
-      }
-    }
-
-      if (formState === 1) {
-        let result = await handleRegister(name, username, password);
-        console.log(result);
-
+        // Login
+        const result = await handleLogin(username, password);
+        toast({
+          title: "Login Success",
+          description: `Welcome ${result.name || username}!`,
+        });
+        // Redirect after login
+        navigate("/home"); 
+      } else {
+        // Register
+        const result = await handleRegister(name, username, password);
         toast({
           title: "Registration Success",
-          description: result, // message from backend
+          description: result, // string message from backend
           duration: 4000,
         });
 
-        setMessages(result);
-        setOpen(true);
+        // Reset form
         setUsername("");
-        setError("");
-        setFormState(0);
         setPassword("");
+        setName("");
+        setFormState(0);
       }
     } catch (err) {
-      let message = err.response.data.message;
-
+      const message =
+        err?.response?.data?.message || "Something went wrong. Try again.";
       toast({
         title: "Error",
         description: message,
-        variant: "destructive", // red style for error
+        variant: "destructive",
       });
-
-      setError(message);
     }
   };
 
@@ -79,28 +69,26 @@ export default function Authentication() {
       <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl p-6 shadow-lg">
         <CardHeader className="pb-4">
           <CardTitle className="text-2xl font-semibold text-center">
-            Create an Account
+            {formState === 0 ? "Welcome Back" : "Create an Account"}
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your details below to get started
+            {formState === 0
+              ? "Login to continue"
+              : "Enter your details below to get started"}
           </CardDescription>
         </CardHeader>
 
         <div className="flex justify-center gap-4 mb-6">
           <Button
             variant={formState === 0 ? "default" : "ghost"}
-            onClick={() => {
-              setFormState(0);
-            }}
+            onClick={() => setFormState(0)}
             className="w-32"
           >
             Sign In
           </Button>
           <Button
             variant={formState === 1 ? "default" : "ghost"}
-            onClick={() => {
-              setFormState(1);
-            }}
+            onClick={() => setFormState(1)}
             className="w-32"
           >
             Sign Up
@@ -108,9 +96,8 @@ export default function Authentication() {
         </div>
 
         <CardContent>
-          <form className="space-y-4">
-            {/* condition to toggle b/w login signup */}
-            {formState === 1 ? (
+          <form className="space-y-4" onSubmit={handleAuth}>
+            {formState === 1 && (
               <div>
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -119,10 +106,9 @@ export default function Authentication() {
                   placeholder="Enter Full Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </div>
-            ) : (
-              <></>
             )}
             <div>
               <Label htmlFor="username">Username</Label>
@@ -132,6 +118,7 @@ export default function Authentication() {
                 placeholder="Enter Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -143,22 +130,20 @@ export default function Authentication() {
                 placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
+
+            <Button type="submit" className="w-full">
+              {formState === 0 ? "Log In" : "Register"}
+            </Button>
           </form>
         </CardContent>
 
-        {/* <p>{error}</p> */}
-        <CardFooter>
-          <Button className="w-full" onClick={handleAuth}>
-            {" "}
-            {formState === 0 ? "Log In" : "Register"}{" "}
-          </Button>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
 
       <Toaster />
     </div>
   );
-
 }
