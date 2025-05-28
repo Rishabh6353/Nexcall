@@ -13,6 +13,7 @@ import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
 import ChatIcon from "@mui/icons-material/Chat";
 import server from "../environment";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const server_url = server;
 
@@ -546,8 +547,20 @@ export default function VideoMeetComponent() {
             justifyContent: "center",
             gap: "1rem",
             padding: "1rem",
+            position: 'relative'
           }}
         >
+          <IconButton 
+            onClick={() => navigate('/')} 
+            style={{
+              position: 'absolute',
+              top: '20px',
+              left: '20px',
+              color: 'black'
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
           <h2>Enter into Lobby</h2>
           <TextField
             id="outlined-basic"
