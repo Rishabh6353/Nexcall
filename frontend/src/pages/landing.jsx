@@ -1,48 +1,49 @@
 import React from 'react';
-import "../App.css"
-import {Link, useNavigate} from "react-router-dom";
+import '../App.css';
+import { Link, useNavigate } from 'react-router-dom';
+
 export default function LandingPage() {
+  const router = useNavigate();
 
-  const router= useNavigate();
   return (
-    <div className='landingPageContainer'>
-      <nav>
-        <div className='navHeader'>
-          <h2>Nexcall</h2>
-        </div>
-        <div className='navList'>
-          <p onClick={()=>{
-             router("/guestLink")
-          }}>Join as Guest</p>
-          <p onClick={()=>{
-            router("/auth");
-          }}>Register</p>
-          <div onClick={()=>{
-            router("/auth");
-          }} role="button">
-            <p>Login</p>
+    <div className="landingPageContainer">
+     <nav className="navbar">
+  <div className="navHeader">
+    <h2>NexCall</h2>
+  </div>
+  <div className="navLinks">
+    <p onClick={() => router('/guestLink')}>Join as Guest</p>
+    <p onClick={() => router('/auth')}>Register</p>
+    <button className="loginNavBtn" onClick={() => router('/auth')}>
+      Login
+    </button>
+  </div>
+</nav>
+
+
+      <header className="heroSection">
+        <div className="heroContent">
+          <h1>
+            <span className="highlight">Connect</span> with your loved ones.
+          </h1>
+          <p className="subtitle">Crystal-clear, secure video calling for everyone.</p>
+          <div className="getStartedButton" role="button">
+            <Link to="/auth">Get Started</Link>
           </div>
         </div>
-      </nav>
-
-      <div className="landingMainContainer">
-        <div>
-          <h1> <span style={{color:"#FF9839"}}>Connect</span> with your loved ones.</h1>
-
-          <p>Cover a distance with NexCall.</p>
-
-          <div role="button">
-            <Link to={"/auth"}>Get Started</Link>
-          </div>
+        <div className="heroImage">
+          <img src="/mobile.png" alt="Video call illustration" />
         </div>
+      </header>
 
-        <div>
-          <img src="/mobile.png"/>
+      <footer className="footer">
+        <p>© {new Date().getFullYear()} NexCall. All rights reserved.</p>
+        <div className="footerLinks">
+          <a href="https://github.com/Rishabh6353" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#terms">Terms</a>
         </div>
-      </div>
-
-
-
+      </footer>
     </div>
-  )
+  );
 }
