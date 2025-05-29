@@ -1,5 +1,6 @@
 import express from "express";
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 import {createServer} from "node:http";
 
@@ -16,6 +17,7 @@ import userRoutes from "./routes/users.routes.js";
 const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
+const MONGO_URL = process.env.MONGO_URL;
 
 app.set("port",(process.env.PORT || 8000));
 app.use(cors());
@@ -28,11 +30,12 @@ app.use("/api/v1/users",userRoutes);
 
 const start = async()=>{
     //   app.set("mongo_user")
-    const connectionDb = await mongoose.connect("mongodb+srv://Nexcall:Damndean1@nexcall.sa9ndca.mongodb.net/?retryWrites=true&w=majority&appName=Nexcall");
+    const connectionDb = await mongoose.connect(MONGO_URL);
 
     console.log(`Mongo connceted Db Host: ${connectionDb.connection.host}`)
     server.listen(app.get("port"),()=>{
         console.log("Listening on port 8000");
+        console.log(MONGO_URL);
     });
 }
 
